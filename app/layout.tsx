@@ -32,6 +32,8 @@ export default function RootLayout({
           <a href="/" className="font-bold">Vanguard Graph</a>
           <a href="/" className="hover:underline">Dashboard</a>
           <a href="/merchants/new" className="hover:underline">New Merchant</a>
+          <a href="/alerts" className="hover:underline">Alerts</a>
+          <a href="/settings" className="hover:underline">Settings</a>
         </nav>
         {children}
       </body>
