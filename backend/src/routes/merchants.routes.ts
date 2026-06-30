@@ -1,3 +1,14 @@
+<<<<<<< HEAD
+import { Router } from "express";
+import { createMerchantController } from "../modules/merchants/merchants.controller";
+
+
+const merchantrouter = Router();
+
+merchantrouter.post("/",createMerchantController);
+
+export default merchantrouter;
+=======
 import { Router } from 'express'
 import { MerchantsController } from '../modules/merchants/merchants.controller'
 import { MerchantsService } from '../modules/merchants/merchants.service'
@@ -16,3 +27,4 @@ router.patch('/:id', controller.updateMerchant)
 router.post('/:id/payout-change', controller.triggerPayoutChange)
 
 export default router
+>>>>>>> upstream/main

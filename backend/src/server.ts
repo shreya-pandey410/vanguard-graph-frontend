@@ -1,3 +1,13 @@
+<<<<<<< HEAD
+import app from "./app";
+import 'dotenv/config';
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+    console.log(`🚀 Server is running on port ${PORT}`);
+});
+=======
 import app from './app'
 import { env } from './config/env'
 import { logger } from './config/logger'
@@ -39,3 +49,4 @@ main().catch((err) => {
   logger.error('Failed to start server', { error: err })
   process.exit(1)
 })
+>>>>>>> upstream/main
