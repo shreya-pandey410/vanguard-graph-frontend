@@ -22,7 +22,7 @@ export default function InvestigationPage({
   const [action, setAction] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch(`http://localhost:4000/api/v1/merchants/${id}`)
+    fetch(`http://localhost:3001/api/v1/merchants/${id}`)
       .then((res) => res.json())
       .then((json) => {
         if (json.success) {
@@ -37,7 +37,7 @@ export default function InvestigationPage({
         setLoading(false);
       });
 
-    fetch(`http://localhost:4000/api/v1/alerts?merchantId=${id}`)
+    fetch(`http://localhost:3001/api/v1/alerts?merchantId=${id}`)
       .then((res) => res.json())
       .then((json) => {
         if (json.success && json.data?.length > 0) {

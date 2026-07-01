@@ -16,7 +16,7 @@ export default function AlertsPage() {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    fetch("http://localhost:4000/api/v1/alerts")
+    fetch("http://localhost:3001/api/v1/alerts")
       .then((res) => res.json())
       .then((json) => {
         setAlerts(json.data || []);
