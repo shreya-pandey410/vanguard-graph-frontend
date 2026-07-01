@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Vanguard Graph",
-  description: "Fraud coordination intelligence engine",
+  description: "Fraud Coordination Intelligence Engine",
 };
 
 export default function RootLayout({
@@ -28,13 +28,6 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <nav className="bg-black text-white px-6 py-4 flex gap-6">
-          <a href="/" className="font-bold">Vanguard Graph</a>
-          <a href="/" className="hover:underline">Dashboard</a>
-          <a href="/merchants/new" className="hover:underline">New Merchant</a>
-          <a href="/alerts" className="hover:underline">Alerts</a>
-          <a href="/settings" className="hover:underline">Settings</a>
-        </nav>
         {children}
       </body>
     </html>
