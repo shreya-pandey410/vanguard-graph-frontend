@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Merchant {
+  id                String   @id @default(cuid())
+  name              String
+  email             String   @unique
+  phone             String
+  deviceFingerprint String
+  ipAddress         String
+  bankAccountNumber String
+  bankAccountIfsc   String
+  status            String   @default("pending")
+  riskScore         Int      @default(0)
+  riskLevel         String   @default("low")
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  alerts         Alert[]
+  investigations Investigation[]
+  workflowRuns   WorkflowRun[]
+}
+
+model Alert {
+  id              String   @id @default(cuid())
+  merchantId      String
+  riskScore       Int
+  riskLevel       String
+  status          String   @default("open")
+  summary         String
+  investigationId String?
+
+  merchant   Merchant @relation(fields: [merchantId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Investigation {
+  id         String   @id @default(cuid())
+  merchantId String
+  status     String   @default("pending")
+  riskScore  Int?
+  riskMemo   String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  merchant Merchant @relation(fields: [merchantId], references: [id])
+}
+
+model WorkflowRun {
+  id           String   @id @default(cuid())
+  merchantId   String
+  workflowType String
+  status       String   @default("running")
+  renderRunId  String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  merchant Merchant @relation(fields: [merchantId], references: [id])
+}

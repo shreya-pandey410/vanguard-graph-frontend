@@ -1,0 +1,107 @@
+// Vanguard Graph — PostgreSQL schema
+// Run: npx prisma migrate dev --name init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Enums ────────────────────────────────────────────────────────────────────
+
+enum WorkflowType {
+  MERCHANT_ONBOARDING
+  PAYOUT_CHANGE
+}
+
+enum WorkflowStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+}
+
+enum RiskLevel {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum InvestigationStatus {
+  OPEN
+  UNDER_REVIEW
+  ESCALATED
+  CLOSED
+}
+
+// ─── Models ───────────────────────────────────────────────────────────────────
+
+model Merchant {
+  id              String   @id @default(uuid())
+  externalId      String   @unique // ID from the onboarding system
+  businessName    String
+  email           String
+  phoneNumber     String?
+  taxId           String?
+  deviceId        String?
+  ipAddress       String?
+  bankAccountHash String?  // hashed, never plain
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  workflowRuns    WorkflowRun[]
+  investigations  Investigation[]
+
+  @@index([email])
+  @@index([taxId])
+  @@index([bankAccountHash])
+}
+
+model WorkflowRun {
+  id              String         @id @default(uuid())
+  merchantId      String
+  workflowType    WorkflowType
+  renderRunId     String?        // ID returned by Render Workflows
+  status          WorkflowStatus @default(PENDING)
+  inputPayload    Json
+  outputPayload   Json?
+  errorMessage    String?
+  startedAt       DateTime       @default(now())
+  completedAt     DateTime?
+
+  merchant        Merchant       @relation(fields: [merchantId], references: [id])
+
+  @@index([merchantId])
+  @@index([renderRunId])
+}
+
+model Investigation {
+  id              String              @id @default(uuid())
+  merchantId      String
+  workflowRunId   String?
+  riskLevel       RiskLevel
+  riskScore       Float               // 0–100
+  status          InvestigationStatus @default(OPEN)
+
+  // AI-generated content
+  riskMemo        String?             @db.Text
+  ringSummary     String?             @db.Text
+  recommendedAction String?           @db.Text
+
+  // Enrichment snapshots
+  enrichmentData  Json?
+  graphSnapshot   Json?               // ring nodes/edges at time of investigation
+
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  merchant        Merchant            @relation(fields: [merchantId], references: [id])
+
+  @@index([merchantId])
+  @@index([riskLevel])
+  @@index([status])
+}
